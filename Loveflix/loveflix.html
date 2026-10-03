@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOVEFLIX ❤️ | Nuestra Historia en Streaming</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --netflix-red: #E50914;
+      --netflix-red-hover: #f40612;
+      --bg-black: #141414;
+      --bg-dark-card: #181818;
+      --text-white: #ffffff;
+      --text-gray: #aaaaaa;
+      --font-netflix: 'Bebas Neue', cursive, sans-serif;
+      --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-black);
+      color: var(--text-white);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* =========================================
+       1. PANTALLA DE SELECCIÓN DE PERFIL
+       ========================================= */
+    #profile-gate {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #141414;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #profile-gate.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .profile-title {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 2.5rem;
+    }
+
+    .profiles-container {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .profile-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-gray);
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .profile-avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.8rem;
+      border: 3px solid transparent;
+      transition: all 0.25s ease;
+      background: #2b2b2b;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .profile-card:hover {
+      transform: scale(1.08);
+      color: #fff;
+    }
+
+    .profile-card:hover .profile-avatar {
+      border-color: #ffffff;
+      box-shadow: 0 10px 30px rgba(229, 9, 20, 0.45);
+    }
+
+    .profile-name {
+      font-size: 1.15rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* =========================================
+       2. BARRA DE NAVEGACIÓN (NAVBAR)
+       ========================================= */
+    .netflix-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 1rem 3.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      transition: background-color 0.4s ease;
+      background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, transparent 100%);
+    }
+
+    .netflix-nav.scrolled {
+      background-color: #141414;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    .brand-logo {
+      font-family: var(--font-netflix);
+      font-size: 2.5rem;
+      color: var(--netflix-red);
+      letter-spacing: 2px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      text-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem;
+    }
+
+    .nav-item a {
+      color: #e5e5e5;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-item a:hover, .nav-item.active a {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .btn-hub {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: background 0.2s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-hub:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* =========================================
+       3. BANNER PRINCIPAL (HERO)
+       ========================================= */
+    .hero-banner {
+      position: relative;
+      width: 100%;
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+      padding: 0 3.5rem;
+      background: linear-gradient(90deg, rgba(20,20,20,0.95) 0%, rgba(20,20,20,0.6) 50%, rgba(20,20,20,0.2) 100%), 
+                  url('fotos/foto15.jpg') center top/cover no-repeat;
+      margin-bottom: -4rem;
+    }
+
+    .hero-content {
+      max-width: 650px;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-netflix);
+      font-size: 1.2rem;
+      color: #fff;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-badge span {
+      color: var(--netflix-red);
+      font-size: 1.6rem;
+    }
+
+    .hero-title {
+      font-family: var(--font-netflix);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      line-height: 0.95;
+      letter-spacing: 2px;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .match-rate {
+      color: #46d369;
+      font-weight: 700;
+    }
+
+    .age-badge {
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 0.1rem 0.4rem;
+      font-size: 0.8rem;
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      color: #d2d2d2;
+      margin-bottom: 1.8rem;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn-play {
+      background: #ffffff;
+      color: #000;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-play:hover {
+      background: rgba(255, 255, 255, 0.75);
+      transform: scale(1.04);
+    }
+
+    .btn-info {
+      background: rgba(109, 109, 110, 0.7);
+      color: #fff;
+      padding: 0.75rem 1.8rem;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: background 0.2s ease, transform 0.2s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .btn-info:hover {
+      background: rgba(109, 109, 110, 0.4);
+      transform: scale(1.04);
+    }
+
+    /* =========================================
+       4. FILAS DE CONTENIDO (NETFLIX ROWS)
+       ========================================= */
+    .netflix-rows-section {
+      position: relative;
+      z-index: 10;
+      padding: 2rem 0 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .row-container {
+      padding: 0 3.5rem;
+    }
+
+    .row-header {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .row-slider {
+      display: flex;
+      gap: 1.2rem;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 1.2rem 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--netflix-red) transparent;
+    }
+
+    .row-slider::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .row-slider::-webkit-scrollbar-thumb {
+      background: var(--netflix-red);
+      border-radius: 10px;
+    }
+
+    /* Tarjetas de Medios (Cards) */
+    .media-card {
+      position: relative;
+      flex: 0 0 260px;
+      height: 160px;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      background: #1f1f1f;
+      transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.35s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    .media-card:hover {
+      transform: scale(1.18) translateY(-8px);
+      z-index: 20;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.8), 0 0 15px rgba(229, 9, 20, 0.4);
+    }
+
+    .media-preview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #111;
+      pointer-events: none;
+    }
+
+    .video-card-preview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #000;
+    }
+
+    .play-badge-icon {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      z-index: 3;
+    }
+
+    /* Información superpuesta al hacer hover en la tarjeta */
+    .media-card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 0.8rem;
+      background: linear-gradient(0deg, rgba(20,20,20,0.95) 0%, rgba(20,20,20,0.6) 70%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      z-index: 4;
+    }
+
+    .media-card:hover .media-card-overlay {
+      opacity: 1;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.2rem;
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 0.4rem;
+      font-size: 0.7rem;
+      color: #46d369;
+      font-weight: 600;
+    }
+
+    /* =========================================
+       5. MODAL REPRODUCTOR / DETALLES (NETFLIX POPUP)
+       ========================================= */
+    .player-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 900px;
+      background: var(--bg-dark-card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+      position: relative;
+      animation: modalFadeIn 0.3s ease;
+    }
+
+    .modal-media-wrap {
+      width: 100%;
+      height: 480px;
+      background: #000;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-media-wrap video, .modal-media-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.75);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--netflix-red);
+      transform: scale(1.1);
+    }
+
+    .modal-info {
+      padding: 2rem;
+    }
+
+    .modal-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .modal-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-desc {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #ddd;
+    }
+
+    @keyframes modalFadeIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Responsividad */
+    @media (max-width: 768px) {
+      .netflix-nav {
+        padding: 1rem 1.5rem;
+      }
+      .nav-menu {
+        display: none;
+      }
+      .hero-banner {
+        padding: 0 1.5rem;
+        min-height: 70vh;
+      }
+      .row-container {
+        padding: 0 1.5rem;
+      }
+      .media-card {
+        flex: 0 0 200px;
+        height: 125px;
+      }
+      .modal-media-wrap {
+        height: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================
+       1. PANTALLA INICIAL "¿QUIÉN ESTÁ VIENDO?"
+       ========================================= -->
+  <div id="profile-gate">
+    <h1 class="profile-title">¿Quién está viendo?</h1>
+    <div class="profiles-container">
+      <div class="profile-card" onclick="enterNetflix('Mi Amor')">
+        <div class="profile-avatar">
+          <img src="fotos/avatar.jpeg" alt="Mi Amor" class="avatar-img" onerror="this.onerror=null; this.src='fotos/avatar.jpg';">
+        </div>
+        <span class="profile-name">Mi Amor ❤️</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================
+       2. BARRA DE NAVEGACIÓN NETFLIX
+       ========================================= -->
+  <nav class="netflix-nav" id="main-nav">
+    <div class="nav-left">
+      <a href="loveflix.html" class="brand-logo">
+        LOVEFLIX
+      </a>
+      <ul class="nav-menu">
+        <li class="nav-item active"><a href="loveflix.html">Inicio</a></li>
+        <li class="nav-item"><a href="#videos-row">Videos</a></li>
+        <li class="nav-item"><a href="#tendencias-row">Momentos Top</a></li>
+        <li class="nav-item"><a href="#complicidad-row">Complicidad & Citas</a></li>
+        <li class="nav-item"><a href="#recuerdos-row">Recuerdos Inolvidables</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <a href="../index.html" class="btn-hub">← Volver al Hub</a>
+    </div>
+  </nav>
+
+  <!-- =========================================
+       3. BANNER PRINCIPAL (HERO)
+       ========================================= -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>L</span> NUESTRA SERIE ORIGINAL DE AMOR
+      </div>
+      <h1 class="hero-title">NUESTRA HISTORIA</h1>
+      <div class="hero-meta">
+        <span class="match-rate">100% Match para Siempre</span>
+        <span class="age-badge">+18 Amor Real</span>
+        <span>Temporada 1</span>
+        <span class="age-badge">4K Ultra HD</span>
+      </div>
+      <p class="hero-desc">
+        La historia real de dos personas que se encontraron por casualidad y decidieron caminar juntas de la mano. Risas, fiestas, viajes, abrazos interminables y un amor que crece todos los días.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-play" onclick="openMediaModal('video', 'videos/video1.mp4', 'Episodio 1: El Comienzo', 'El video más especial de nuestros primeros momentos y risas juntos.')">
+          ▶ Reproducir Video
+        </button>
+        <button class="btn-info" onclick="openMediaModal('foto', 'fotos/foto15.jpg', 'Noche de Gala y Elegancia', 'La pareja más linda de la noche. Verte con ese vestido rosa y abrazarte así fue un sueño hecho realidad.')">
+          ℹ️ Ver Portada
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================
+       4. FILAS DE CONTENIDO (NETFLIX ROWS)
+       ========================================= -->
+  <main class="netflix-rows-section">
+
+    <!-- FILA 1: NUESTROS VIDEOS -->
+    <div class="row-container" id="videos-row">
+      <h2 class="row-header">🎬 Episodios Especiales: Nuestros Videos</h2>
+      <div class="row-slider">
+        
+        <!-- Video 1 -->
+        <div class="media-card" 
+             onmouseenter="playPreview(this)" 
+             onmouseleave="pausePreview(this)"
+             onclick="openMediaModal('video', 'videos/video1.mp4', 'Episodio 1 • El Comienzo de Todo', 'Nuestros primeros videos y risas que dieron inicio a esta hermosa historia de amor.')">
+          <div class="play-badge-icon">▶</div>
+          <video class="video-card-preview" muted loop playsinline preload="metadata" src="videos/video1.mp4"></video>
+          <div class="media-card-overlay">
+            <div class="card-title">Episodio 1 • El Comienzo</div>
+            <div class="card-tags"><span>100% Match</span> <span>Video Especial</span></div>
+          </div>
+        </div>
+
+        <!-- Video 2 -->
+        <div class="media-card" 
+             onmouseenter="playPreview(this)" 
+             onmouseleave="pausePreview(this)"
+             onclick="openMediaModal('video', 'videos/video2.mp4', 'Episodio 2 • Enseñandote a Manejar', 'La primera vez que te enseñé a manejar.... Un recuerdo que siempre me hace sonreír.')">
+          <div class="play-badge-icon">▶</div>
+          <video class="video-card-preview" muted loop playsinline preload="metadata" src="videos/video2.mp4"></video>
+          <div class="media-card-overlay">
+            <div class="card-title">Episodio 2 • Enseñandote a Manejar</div>
+            <div class="card-tags"><span>99% Match</span> <span>Video Especial</span></div>
+          </div>
+        </div>
+
+        <!-- Video 3 -->
+        <div class="media-card" 
+             onmouseenter="playPreview(this)" 
+             onmouseleave="pausePreview(this)"
+             onclick="openMediaModal('video', 'videos/video3.mp4', 'Episodio 3 • Momentos Inolvidables', 'Viendonos al espejo feo que compre.. siempre me acuerdo de ti.')">
+          <div class="play-badge-icon">▶</div>
+          <video class="video-card-preview" muted loop playsinline preload="metadata" src="videos/video3.mp4"></video>
+          <div class="media-card-overlay">
+            <div class="card-title">Episodio 3 • Momentos Inolvidables</div>
+            <div class="card-tags"><span>98% Match</span> <span>Video Especial</span></div>
+          </div>
+        </div>
+
+        <!-- Video 4 -->
+        <div class="media-card" 
+             onmouseenter="playPreview(this)" 
+             onmouseleave="pausePreview(this)"
+             onclick="openMediaModal('video', 'videos/video4.mp4', 'Episodio 4 • Paseos y Rutas', 'Caminando juntos hacia nuevos horizontes y coleccionando recuerdos.')">
+          <div class="play-badge-icon">▶</div>
+          <video class="video-card-preview" muted loop playsinline preload="metadata" src="videos/video4.mp4"></video>
+          <div class="media-card-overlay">
+            <div class="card-title">Episodio 4 • Paseos y Rutas</div>
+            <div class="card-tags"><span>99% Match</span> <span>Video Especial</span></div>
+          </div>
+        </div>
+
+        <!-- Video 5 -->
+        <div class="media-card" 
+             onmouseenter="playPreview(this)" 
+             onmouseleave="pausePreview(this)"
+             onclick="openMediaModal('video', 'videos/video5.mp4', 'Episodio 5 • Enojada como Siempre', 'En el parque riendonos y conversando y haciendote enojar.')">
+          <div class="play-badge-icon">▶</div>
+          <video class="video-card-preview" muted loop playsinline preload="metadata" src="videos/video5.mp4"></video>
+          <div class="media-card-overlay">
+            <div class="card-title">Episodio 5 • Enojada como Siempre</div>
+            <div class="card-tags"><span>100% Match</span> <span>Video Especial</span></div>
+          </div>
+        </div>
+
+        <!-- Video 6 -->
+        <div class="media-card" 
+             onmouseenter="playPreview(this)" 
+             onmouseleave="pausePreview(this)"
+             onclick="openMediaModal('video', 'videos/video6.mp4', 'Episodio 6 • Amor y Complicidad', 'Pequeños instantes capturados en video que guardan todo mi amor por ti.')">
+          <div class="play-badge-icon">▶</div>
+          <video class="video-card-preview" muted loop playsinline preload="metadata" src="videos/video6.mp4"></video>
+          <div class="media-card-overlay">
+            <div class="card-title">Episodio 6 • Amor y Complicidad</div>
+            <div class="card-tags"><span>99% Match</span> <span>Video Especial</span></div>
+          </div>
+        </div>
+        <!-- Video 7 -->
+        <div class="media-card" 
+             onmouseenter="playPreview(this)" 
+             onmouseleave="pausePreview(this)"
+             onclick="openMediaModal('video', 'videos/video7.mp4', 'Episodio 7 • Mas Besos', 'Siempre Queriendo besos de ti.')">
+          <div class="play-badge-icon">▶</div>
+          <video class="video-card-preview" muted loop playsinline preload="metadata" src="videos/video7.mp4"></video>
+          <div class="media-card-overlay">
+            <div class="card-title">Episodio 7 • Mas Besos</div>
+            <div class="card-tags"><span>100% Match</span> <span>Video Especial</span></div>
+          </div>
+        </div>
+        <!-- Video 8 -->
+        <div class="media-card" 
+             onmouseenter="playPreview(this)" 
+             onmouseleave="pausePreview(this)"
+             onclick="openMediaModal('video', 'videos/video8.mp4', 'Episodio 8 • Nuestros Recuerdos', 'Mi Recuerdo favorito de todos los videos que hemos hecho juntos, lleno de amor y felicidad.')">
+          <div class="play-badge-icon">▶</div>
+          <video class="video-card-preview" muted loop playsinline preload="metadata" src="videos/video8.mp4"></video>
+          <div class="media-card-overlay">
+            <div class="card-title">Episodio 8 • Nuestros Recuerdos</div>
+            <div class="card-tags"><span>100% Match</span> <span>Video Especial</span></div>
+          </div>
+        </div>
+
+        <!-- Video 9-->
+        <div class="media-card" 
+             onmouseenter="playPreview(this)" 
+             onmouseleave="pausePreview(this)"
+             onclick="openMediaModal('video', 'videos/video9.mp4', 'Episodio 9 • Viaje juntos', 'Instante donde nos íbamos a vivir juntos.')">
+          <div class="play-badge-icon">▶</div>
+          <video class="video-card-preview" muted loop playsinline preload="metadata" src="videos/video9.mp4"></video>
+          <div class="media-card-overlay">
+            <div class="card-title">Episodio 9 • Viaje juntos</div>
+            <div class="card-tags"><span>100% Match</span> <span>Video Especial</span></div>
+          </div>
+        </div>
+
+        <!-- Video 10-->
+        <div class="media-card" 
+             onmouseenter="playPreview(this)" 
+             onmouseleave="pausePreview(this)"
+             onclick="openMediaModal('video', 'videos/video10.mp4', 'Episodio 10 • Besos que Derriten', 'Instantes que nos definen y nos unen en el amor que compartimos.')">
+          <div class="play-badge-icon">▶</div>
+          <video class="video-card-preview" muted loop playsinline preload="metadata" src="videos/video10.mp4"></video>
+          <div class="media-card-overlay">
+            <div class="card-title">Episodio 10 • Besos que Derriten</div>
+            <div class="card-tags"><span>100% Match</span> <span>Video Especial</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FILA 2: MOMENTOS TOP Y NOCHES DE GALA -->
+    <div class="row-container" id="tendencias-row">
+      <h2 class="row-header">🔥 Tendencias de Amor: Nuestros Momentos Estelares</h2>
+      <div class="row-slider">
+
+        <!-- Foto 7: Columpio floral -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto7.jpg', 'Noche de Gala y Flores', 'Esa noche te veías más hermosa que nunca. Verte sonreír en ese columpio de flores fue digno de una película de amor.')">
+          <img src="fotos/foto7.jpg" class="media-preview" alt="Noche de Gala">
+          <div class="media-card-overlay">
+            <div class="card-title">Noche de Gala & Flores 🌸</div>
+            <div class="card-tags"><span>100% Match</span> <span>Foto Top</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 15: Vestido largo y traje -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto15.jpg', 'Noche de Gala y Elegancia', 'La pareja más linda de toda la noche. Verte con ese vestido rosa y abrazarte así fue un sueño hecho realidad.')">
+          <img src="fotos/foto15.jpg" class="media-preview" alt="Abrazados en la Gala">
+          <div class="media-card-overlay">
+            <div class="card-title">Elegancia & Amor ✨</div>
+            <div class="card-tags"><span>100% Match</span> <span>Foto Top</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 21: Vestido rojo -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto21.jpg', 'Vestido Rojo Pasión', 'Ese vestido rojo te quedaba espectacular. Abrazarte frente al espejo y verte tan radiante me fascina cada vez que lo recuerdo.')">
+          <img src="fotos/foto21.jpg" class="media-preview" alt="Vestido Rojo">
+          <div class="media-card-overlay">
+            <div class="card-title">Vestido Rojo Pasión ❤️</div>
+            <div class="card-tags"><span>100% Match</span> <span>Foto Top</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 8: Navidad juntos -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto8.jpg', 'Nuestra Primera Navidad', 'Celebrar fechas especiales juntos y vestidos de rojo al pie del árbol... el mejor regalo de Navidad siempre eres tú.')">
+          <img src="fotos/foto8.jpg" class="media-preview" alt="Navidad">
+          <div class="media-card-overlay">
+            <div class="card-title">Navidad Juntos 🎄</div>
+            <div class="card-tags"><span>99% Match</span> <span>Recuerdo</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 5: Abrazo íntimo -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto5.jpg', 'Mi Refugio Seguro 💖', 'Estar así contigo, abrazados en nuestro propio mundo donde nada más importa... eres mi paz absoluta y mi felicidad.')">
+          <img src="fotos/foto5.jpg" class="media-preview" alt="Abrazo">
+          <div class="media-card-overlay">
+            <div class="card-title">Mi Refugio Seguro 💖</div>
+            <div class="card-tags"><span>100% Match</span> <span>Amor Puro</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 1: Sonrisa comiendo -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto1.jpg', 'Tu Sonrisa y Nuestros Antojos🥐', 'Cualquier salida contigo, hasta una comida improvisada, se convierte en el momento más lindo por ver esa sonrisa tan hermosa.')">
+          <img src="fotos/foto1.jpg" class="media-preview" alt="Sonrisa">
+          <div class="media-card-overlay">
+            <div class="card-title">Tu Sonrisa & Antojos 🥐</div>
+            <div class="card-tags"><span>99% Match</span> <span>Espontáneo</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FILA 3: COMPLICIDAD, RISAS Y FOTOS TIERNAS -->
+    <div class="row-container" id="complicidad-row">
+      <h2 class="row-header">✨ Risas, Complicidad & Citas Especiales</h2>
+      <div class="row-slider">
+
+        <!-- Foto 3: Risas en el auto -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto3.jpg', 'Risas en el Auto', 'Esa mirada y esa risa espontánea que tienes cuando vamos de paseo... mi momento favorito del día entero.')">
+          <img src="fotos/foto3.jpg" class="media-preview" alt="Risas">
+          <div class="media-card-overlay">
+            <div class="card-title">Risas en el Auto 🚗</div>
+            <div class="card-tags"><span>100% Match</span> <span>Felicidad</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 9: Arrugando la nariz -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto9.jpg', 'Complicidad y Muecas', 'Amo cuando haces tus caras chistosas y arrugas la nariz. Eres mi cómplice favorita en todo.')">
+          <img src="fotos/foto9.jpg" class="media-preview" alt="Muecas">
+          <div class="media-card-overlay">
+            <div class="card-title">Complicidad & Muecas 😜</div>
+            <div class="card-tags"><span>99% Match</span> <span>Divertido</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 4: Girasol -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto4.jpg', 'Mi Niña Bonita y su Girasol', 'Tus fotos espontáneas, tus ocurrencias y ese collar de girasol que te queda tan perfecto.')">
+          <img src="fotos/foto4.jpg" class="media-preview" alt="Girasol">
+          <div class="media-card-overlay">
+            <div class="card-title">Mi Niña & su Girasol 🌻</div>
+            <div class="card-tags"><span>100% Match</span> <span>Tierna</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 6: Abrazo en el suelo -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto6.jpg', 'Abrazos en el Suelo', 'No importa dónde estemos, si es sentados en el piso abrazándonos, contigo cualquier lugar se siente como en casa.')">
+          <img src="fotos/foto6.jpg" class="media-preview" alt="Abrazo Suelo">
+          <div class="media-card-overlay">
+            <div class="card-title">Abrazos en el Suelo 🛋️</div>
+            <div class="card-tags"><span>98% Match</span> <span>Hogar</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 16: Perlas en la fiesta -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto16.jpg', 'Tus Accesorios en Mí', 'Cualquier juego tuyo me hace feliz, hasta ponerme tus perlas en el cabello durante la fiesta para sacarte una sonrisa.')">
+          <img src="fotos/foto16.jpg" class="media-preview" alt="Perlas">
+          <div class="media-card-overlay">
+            <div class="card-title">Tus Accesorios en Mí 👑</div>
+            <div class="card-tags"><span>99% Match</span> <span>Risas</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 14: Mio Mio :3 -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto14.jpg', 'Mío Mío :3', 'Cuando me mandas fotos diciendo \'Mío Mío :3\'... saber que soy tuyo y tú eres mía es lo mejor que me ha pasado.')">
+          <img src="fotos/foto14.jpg" class="media-preview" alt="Mio Mio">
+          <div class="media-card-overlay">
+            <div class="card-title">Mío Mío :3 💌</div>
+            <div class="card-tags"><span>100% Match</span> <span>Ternura</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FILA 4: RECUERDOS INOLVIDABLES Y DIARIOS -->
+    <div class="row-container" id="recuerdos-row">
+      <h2 class="row-header">✈️ Recuerdos Inolvidables & Amor Diario</h2>
+      <div class="row-slider">
+
+        <!-- Foto 2: En el bus/carro con mascarilla -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto2.jpg', 'Juntos en el Camino', 'Cuidándonos mutuamente y compartiendo el camino mientras la luz del atardecer nos iluminaba.')">
+          <img src="fotos/foto2.jpg" class="media-preview" alt="Camino">
+          <div class="media-card-overlay">
+            <div class="card-title">Juntos en el Camino 🌅</div>
+            <div class="card-tags"><span>99% Match</span> <span>Viaje</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 10: Beso nocturno en auto -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto10.jpg', 'Besos en el Camino de Noche', 'Volviendo de noche cansados pero llenos de amor. Esos besos tuyos me recargan el alma por completo.')">
+          <img src="fotos/foto10.jpg" class="media-preview" alt="Beso Noche">
+          <div class="media-card-overlay">
+            <div class="card-title">Besos de Noche 🌙</div>
+            <div class="card-tags"><span>100% Match</span> <span>Romántico</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 12: Naturaleza y gafas -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto12.jpg', 'Paseo en la Naturaleza', 'Rodeados de verde y aire puro, descubriendo lugares nuevos siempre agarrados de la mano.')">
+          <img src="fotos/foto12.jpg" class="media-preview" alt="Naturaleza">
+          <div class="media-card-overlay">
+            <div class="card-title">Paseo en la Naturaleza 🌿</div>
+            <div class="card-tags"><span>98% Match</span> <span>Aventura</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 11: Mirada dulce y lunar -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto11.jpg', 'Tu Mirada Dulce', 'Esa carita tierna que me enamora cada segundo. Tu lunar y tus ojos tienen toda la magia del mundo.')">
+          <img src="fotos/foto11.jpg" class="media-preview" alt="Mirada">
+          <div class="media-card-overlay">
+            <div class="card-title">Tu Mirada Dulce ✨</div>
+            <div class="card-tags"><span>100% Match</span> <span>Amor</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 13: Despertar -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto13.jpg', 'Despertar y Pensar en Ti', 'La carita más dulce que me alegra el día entero con solo mirarme.')">
+          <img src="fotos/foto13.jpg" class="media-preview" alt="Despertar">
+          <div class="media-card-overlay">
+            <div class="card-title">Pensar en Ti ☀️</div>
+            <div class="card-tags"><span>99% Match</span> <span>Ternura</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 17: Princesa y columpio -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto17.jpg', 'Mi Princesa y Yo', 'Caminar a tu lado y verte brillar con tanta luz fue el momento más inolvidable de la fiesta.')">
+          <img src="fotos/foto17.jpg" class="media-preview" alt="Princesa">
+          <div class="media-card-overlay">
+            <div class="card-title">Mi Princesa & Yo 👑</div>
+            <div class="card-tags"><span>100% Match</span> <span>Gala</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 19: Vals de gala -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto19.jpg', 'El Vals en la Pista', 'Verte bailar en el centro de la pista, tan elegante y hermosa... una noche que nunca olvidaremos.')">
+          <img src="fotos/foto19.jpg" class="media-preview" alt="Vals">
+          <div class="media-card-overlay">
+            <div class="card-title">El Vals en la Pista 💃</div>
+            <div class="card-tags"><span>99% Match</span> <span>Baile</span></div>
+          </div>
+        </div>
+
+        <!-- Foto 20: Uniforme y flor -->
+        <div class="media-card" onclick="openMediaModal('foto', 'fotos/foto20.jpg', 'Mi Niña Estudiosa 📚', 'Esa foto lista para clases... eres la niña más linda y dedicada del mundo.')">
+          <img src="fotos/foto20.jpg" class="media-preview" alt="Estudiosa">
+          <div class="media-card-overlay">
+            <div class="card-title">Mi Niña Estudiosa 📚</div>
+            <div class="card-tags"><span>100% Match</span> <span>Dedicada</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- =========================================
+       5. MODAL REPRODUCTOR NETFLIX
+       ========================================= -->
+  <div class="player-modal" id="media-modal" onclick="closeModalOnOutside(event)">
+    <div class="modal-box">
+      <button class="modal-close-btn" onclick="closeMediaModal()">✕</button>
+      
+      <div class="modal-media-wrap" id="modal-container">
+        <!-- Inyectado dinámicamente: <video> o <img> -->
+      </div>
+
+      <div class="modal-info">
+        <div class="modal-meta-row">
+          <span class="match-rate" style="font-weight: 700;">100% de Match de Amor</span>
+          <span class="age-badge">+18 Amor Eterno</span>
+          <span>4K Ultra HD</span>
+        </div>
+        <h2 class="modal-title" id="modal-title">Título del Recuerdo</h2>
+        <p class="modal-desc" id="modal-desc">Descripción del recuerdo...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 1. Entrada de Selección de Perfil
+    function enterNetflix(profileName) {
+      const gate = document.getElementById('profile-gate');
+      gate.classList.add('hidden');
+    }
+
+    // 2. Efecto de Barra de Navegación al Scrollear
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('main-nav');
+      if (window.scrollY > 50) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // 3. Previsualización de video al pasar el cursor (Hover Preview)
+    function playPreview(card) {
+      const video = card.querySelector('video');
+      if (video) {
+        video.play().catch(e => {
+          // Manejo silencioso si autoplay está bloqueado por el navegador
+        });
+      }
+    }
+
+    function pausePreview(card) {
+      const video = card.querySelector('video');
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+      }
+    }
+
+    // 4. Lógica del Modal Pop-up para Fotos y Videos
+    const modal = document.getElementById('media-modal');
+    const modalContainer = document.getElementById('modal-container');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDesc = document.getElementById('modal-desc');
+
+    function openMediaModal(type, src, title, desc) {
+      modalTitle.textContent = title;
+      modalDesc.textContent = desc;
+
+      if (type === 'video') {
+        modalContainer.innerHTML = `
+          <video controls autoplay style="width:100%; height:100%;">
+            <source src="${src}" type="video/mp4">
+            Tu navegador no soporta el formato de video o el archivo "${src}" no se encuentra.
+          </video>
+        `;
+      } else {
+        modalContainer.innerHTML = `
+          <img src="${src}" alt="${title}" style="width:100%; height:100%; object-fit:contain;">
+        `;
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function closeMediaModal() {
+      modal.style.display = 'none';
+      modalContainer.innerHTML = ''; // Detener video
+    }
+
+    function closeModalOnOutside(e) {
+      if (e.target === modal) {
+        closeMediaModal();
+      }
+    }
+  </script>
+</body>
+</html>

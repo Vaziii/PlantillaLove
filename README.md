@@ -29,13 +29,26 @@
 
 ---
 
-## ⚙️ Cómo Personalizarla Fácilmente
+## 🎬 Cómo usar la página estilo Netflix ([Netflix.html](file:///C:/Users/elkin/Documents/Plantilla/Netflix.html))
 
-### 1. Cambiar la Fecha de Inicio de la Relación:
-Abre el archivo `script.js` y edita la línea:
-```javascript
-startDate: new Date('2023-05-14T00:00:00') // Pon tu fecha en formato AAAA-MM-DD
-```
+He creado las carpetas `fotos/` y `videos/` listas para que solo arrastres tus archivos:
+
+### 📁 Para las fotos (en la carpeta `fotos/`):
+Nombra tus fotos en formato `.jpg` o `.png`:
+- `foto1.jpg` (portada principal y foto estelar)
+- `foto2.jpg`, `foto3.jpg`, `foto4.jpg`, `foto5.jpg`, `foto6.jpg`
+- `foto7.jpg`, `foto8.jpg`, `foto9.jpg`, `foto10.jpg`
+- `foto11.jpg`, `foto12.jpg`, `foto13.jpg`
+
+### 🎥 Para los videos (en la carpeta `videos/`):
+Nombra tus videos en formato `.mp4`:
+- `video1.mp4` (video principal de la serie de amor)
+- `video2.mp4` (episodio 2)
+- `video3.mp4` (episodio 3)
+- `video4.mp4` (episodio 4)
+- `video5.mp4` (episodio 5)
+
+*(Mientras no coloques los archivos, la página mostrará automáticamente placeholders elegantes estilo Netflix para que la interfaz se vea impecable desde ya).*
 
 ### 2. Cambiar Fotos:
 En `galeria.html`, `timeline.html` o `musica.html`, reemplaza las URLs de las imágenes (`src="..."`) por las rutas de tus propias fotos (puedes crear una carpeta `fotos/` y poner `fotos/mi_foto.jpg`).
