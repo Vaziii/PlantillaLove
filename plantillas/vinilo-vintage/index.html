@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diseño Nº2 · Songs for You 🎵📀</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Caveat:wght@500;700&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ======= PANTALLA INTRO: SOBRE + CARTA ======= -->
+  <div id="intro" class="intro">
+    <img id="envImg" class="env-img" src="../../assets/fondo/cerrado.png" alt="Sobre cerrado" onclick="openEnvelope()">
+    <p class="tap-text">Tap to open</p>
+  </div>
+
+  <!-- ======= EXPLOSIÓN DE FLORES ======= -->
+  <div id="flower-burst" class="flower-burst hidden"></div>
+
+  <!-- ======= PÁGINA PRINCIPAL ======= -->
+  <div id="bgContainer" class="bg-container hidden">
+  <main id="main" class="main">
+
+    <!-- Decoración lateral -->
+    <div class="decor decor-left">
+      <svg class="dried" viewBox="0 0 60 200"><path d="M30 200 C 28 140, 34 90, 30 20" stroke="#a89070" stroke-width="2" fill="none"/><ellipse cx="24" cy="60" rx="8" ry="14" fill="#c4b29a" transform="rotate(-20 24 60)"/><ellipse cx="38" cy="90" rx="8" ry="14" fill="#bfae92" transform="rotate(20 38 90)"/><ellipse cx="24" cy="120" rx="7" ry="12" fill="#c4b29a" transform="rotate(-15 24 120)"/></svg>
+      <svg class="bouquet" viewBox="0 0 100 100"><circle cx="30" cy="35" r="12" fill="#f3c6d0"/><circle cx="55" cy="25" r="14" fill="#e8a2b4"/><circle cx="65" cy="50" r="11" fill="#fce4ec"/><path d="M45 60 L30 95 M45 60 L55 95 M45 60 L45 98" stroke="#8fa382" stroke-width="3" fill="none"/></svg>
+    </div>
+    <div class="decor decor-right">
+      <svg class="dried" viewBox="0 0 60 200"><path d="M30 200 C 32 150, 26 100, 30 30" stroke="#a89070" stroke-width="2" fill="none"/><ellipse cx="38" cy="70" rx="8" ry="14" fill="#c4b29a" transform="rotate(20 38 70)"/><ellipse cx="22" cy="110" rx="7" ry="12" fill="#bfae92" transform="rotate(-18 22 110)"/></svg>
+      <svg class="bouquet" viewBox="0 0 100 100"><circle cx="65" cy="35" r="12" fill="#f3c6d0"/><circle cx="42" cy="25" r="14" fill="#fce4ec"/><circle cx="32" cy="52" r="11" fill="#e8a2b4"/><path d="M50 60 L65 95 M50 60 L40 95" stroke="#8fa382" stroke-width="3" fill="none"/></svg>
+    </div>
+
+    <header class="header">
+      <h1 class="title">Songs for you</h1>
+      <p class="subtitle">— a little collection of us —</p>
+    </header>
+
+    <section class="stage">
+
+      <!-- VINILO -->
+      <div class="turntable">
+        <div class="vinyl-wrap" id="vinylWrap">
+          <div class="vinyl" id="vinyl">
+            <div class="vinyl-cover" id="vinylCover"></div>
+            <div class="vinyl-hole"></div>
+          </div>
+        </div>
+        <div class="tonearm" id="tonearm">
+          <div class="tonearm-pivot"></div>
+          <div class="tonearm-arm"></div>
+          <div class="tonearm-head"></div>
+        </div>
+      </div>
+
+      <!-- REPRODUCTOR -->
+      <div class="player">
+        <h2 id="songTitle" class="song-title">Canción 1</h2>
+        <p id="songArtist" class="song-artist">Artista</p>
+
+        <div class="controls">
+          <button id="prevBtn" class="ctrl-btn" title="Anterior">⏮</button>
+          <button id="playBtn" class="ctrl-btn play" title="Play/Pause">▶</button>
+          <button id="nextBtn" class="ctrl-btn" title="Siguiente">⏭</button>
+        </div>
+
+        <div class="progress-row">
+          <div class="progress" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="time-row">
+            <span id="timeNow">00:00</span> / <span id="timeTotal">00:00</span>
+          </div>
+        </div>
+
+        <div class="volume-row">
+          <span>Vol</span>
+          <input type="range" id="volume" min="0" max="1" step="0.01" value="0.8">
+        </div>
+      </div>
+
+      <!-- CARTA AL LADO -->
+      <aside class="letter-card">
+        <h3 class="letter-head">Hey you,</h3>
+        <p class="letter-body">
+          If I could give you<br>
+          one thing, it would be<br>
+          the chance to see<br>
+          yourself through my eyes...<br><br>
+          Please stay.
+        </p>
+        <p class="letter-sign">— Alex</p>
+      </aside>
+
+    </section>
+
+    <!-- LISTA DE CANCIONES -->
+    <section class="playlist">
+      <h3 class="playlist-title">♪ Nuestra colección</h3>
+      <div id="songList"></div>
+    </section>
+
+    <!-- TARJETA LETTER FOR YOU -->
+    <section class="letter-cta reveal">
+      <h3 class="cta-title">A letter for you</h3>
+      <p class="cta-sub">A small reminder of a moment worth keeping.</p>
+      <div class="mini-card">
+        <div class="mini-cover" id="miniCover"></div>
+        <div class="mini-info">
+          <strong id="miniTitle">Canción 1</strong>
+          <span id="miniArtist">Artista</span>
+        </div>
+        <button class="mini-play" id="miniPlay">▶</button>
+      </div>
+      <div class="wine-card">
+        <p>"Some moments are too beautiful to forget."</p>
+      </div>
+      <svg class="cta-flowers" viewBox="0 0 200 40"><circle cx="40" cy="25" r="10" fill="#e8a2b4"/><circle cx="160" cy="22" r="12" fill="#f3c6d0"/><circle cx="100" cy="30" r="8" fill="#fce4ec"/></svg>
+    </section>
+
+    <!-- FOTOGRAFÍA FAVORITA -->
+    <section class="favorite-section reveal">
+      <div class="favorite-frame">
+        <div class="tape tape-tl"></div>
+        <div class="tape tape-br"></div>
+        <!-- REEMPLAZA ESTA IMAGEN: assets/images/favorite-memory.jpg -->
+        <img id="favoriteImg" class="favorite-img" src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=700&auto=format&fit=crop" alt="Nuestro recuerdo favorito">
+        <svg class="fav-petal fav-p1" viewBox="0 0 20 20"><ellipse cx="10" cy="10" rx="9" ry="5" fill="#e8a2b4" opacity="0.7"/></svg>
+        <svg class="fav-petal fav-p2" viewBox="0 0 20 20"><ellipse cx="10" cy="10" rx="9" ry="5" fill="#f3c6d0" opacity="0.7"/></svg>
+        <svg class="fav-branch" viewBox="0 0 60 60"><path d="M55 5 Q30 25 5 55" stroke="#a89070" stroke-width="2" fill="none"/><ellipse cx="25" cy="28" rx="7" ry="4" fill="#c4b29a" transform="rotate(40 25 28)"/><ellipse cx="38" cy="40" rx="7" ry="4" fill="#bfae92" transform="rotate(40 38 40)"/></svg>
+        <p class="fav-note">mi favorita ♡</p>
+      </div>
+      <h3 class="fav-title">A favorite memory</h3>
+      <p class="fav-sub">One of those moments I wish I could keep forever.</p>
+    </section>
+
+    <!-- CARRUSEL DE RECUERDOS -->
+    <section class="video-section reveal">
+      <h3 class="playlist-title">🎞 Nuestros Recuerdos</h3>
+      <div class="carousel">
+        <button class="car-btn prev" onclick="carSlide(-1)">❮</button>
+        <div class="car-track" id="carTrack">
+          <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=900" alt="Recuerdo 1">
+          <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=900" alt="Recuerdo 2">
+          <video controls poster="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=900" preload="metadata"><source src="../../assets/video/WhatsApp Video 2026-10-02 at 11.22.42 PM.mp4" type="video/mp4"></video>
+          <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=900" alt="Recuerdo 3">
+        </div>
+        <button class="car-btn next" onclick="carSlide(1)">❯</button>
+      </div>
+      <div class="car-dots" id="carDots"></div>
+      <p class="car-caption" id="carCaption">Los momentos que más atesoro.</p>
+    </section>
+
+    <footer class="foot">Diseño Nº2 · Hecho con amor ♡</footer>
+  </main>
+  </div>
+
+  <!-- Botón esquina + panel lateral -->
+  <button id="sideFab" class="side-fab" title="Abrir carta">✉</button>
+  <aside id="sidePanel" class="side-panel">
+    <button class="side-close" onclick="toggleSide()">✕</button>
+    <h3 class="side-title">Una carta para ti</h3>
+    <p class="side-text">Muy pronto escribiré algo especial aquí… por ahora, esto es solo el comienzo de un recuerdo que quiero guardar contigo. ♡</p>
+    <div class="side-letter">
+      <h4 class="letter-head">Hey you,</h4>
+      <p class="letter-body">
+        If I could give you<br>
+        one thing, it would be<br>
+        the chance to see<br>
+        yourself through my eyes...<br><br>
+        Please stay.
+      </p>
+      <p class="letter-sign">— Alex</p>
+    </div>
+  </aside>
+
+  <audio id="audio" preload="metadata"></audio>
+  <script src="script.js"></script>
+</body>
+</html>
