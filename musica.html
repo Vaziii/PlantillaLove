@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestra Banda Sonora 🎵 | Para Mi Amor</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Estilos específicos del reproductor */
+    .player-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2.5rem;
+      width: 100%;
+      max-width: 950px;
+      margin-top: 1.5rem;
+    }
+
+    .player-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-radius: 28px;
+      padding: 2.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Vinilo / Portada giratoria */
+    .vinyl-container {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin-bottom: 2rem;
+    }
+
+    .vinyl-disc {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle, #2c2c2c 10%, #111 35%, #2a2a2a 40%, #111 70%, #000 100%);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6), 0 0 20px rgba(255, 75, 114, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.5s ease;
+    }
+
+    .vinyl-disc.rotating {
+      animation: spinVinyl 8s linear infinite;
+    }
+
+    .vinyl-cover {
+      width: 105px;
+      height: 105px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .song-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.3rem;
+    }
+
+    .song-artist {
+      font-size: 0.95rem;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .dedication-box {
+      font-family: var(--font-romantic);
+      font-size: 1.35rem;
+      color: #ffd1dc;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 1rem 1.4rem;
+      border-radius: 16px;
+      border: 1px dashed rgba(255, 75, 114, 0.3);
+      margin-bottom: 1.5rem;
+      line-height: 1.3;
+      width: 100%;
+    }
+
+    /* Barra de progreso */
+    .progress-container {
+      width: 100%;
+      margin-bottom: 1.2rem;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .time-stamps {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    /* Controles */
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .ctrl-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-glass);
+      color: #fff;
+      font-size: 1.2rem;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .ctrl-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+
+    .ctrl-btn.play-btn {
+      width: 60px;
+      height: 60px;
+      font-size: 1.6rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none;
+      box-shadow: 0 6px 20px var(--primary-glow);
+    }
+
+    /* Lista de Canciones */
+    .playlist-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-radius: 28px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .playlist-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .playlist-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      overflow-y: auto;
+      max-height: 420px;
+      padding-right: 0.5rem;
+    }
+
+    .track-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .track-item:hover, .track-item.active {
+      background: rgba(255, 75, 114, 0.12);
+      border-color: rgba(255, 75, 114, 0.3);
+      transform: translateX(4px);
+    }
+
+    .track-item.active .track-name {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .track-thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .track-info {
+      flex-grow: 1;
+    }
+
+    .track-name {
+      font-size: 0.95rem;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .track-artist {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .track-icon {
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    @keyframes spinVinyl {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .player-wrapper {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+
+  <div class="app-container">
+    <header class="nav-header">
+      <a href="index.html" class="logo">
+        <span>✨</span> Nuestro Universo
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-btn">← Volver al Menú</a></li>
+          <li><a href="musica.html" class="nav-btn active">Música</a></li>
+          <li><a href="galeria.html" class="nav-btn">Fotos</a></li>
+          <li><a href="cartas.html" class="nav-btn">Cartas</a></li>
+          <li><a href="timeline.html" class="nav-btn">Historia</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="hero-section" style="margin-bottom: 1.5rem;">
+      <div class="badge-tag">🎧 Playlist Especial</div>
+      <h1 class="hero-title">Nuestra Banda Sonora</h1>
+      <p class="hero-subtitle">"Cada canción guarda un recuerdo contigo..."</p>
+    </section>
+
+    <!-- Reproductor y Lista -->
+    <div class="player-wrapper">
+      
+      <!-- Lado Izquierdo: Reproductor Vinilo -->
+      <div class="player-card">
+        <div class="vinyl-container">
+          <div class="vinyl-disc" id="vinyl">
+            <img id="player-cover" src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=300&auto=format&fit=crop" class="vinyl-cover" alt="Portada de canción">
+          </div>
+        </div>
+
+        <h2 class="song-title" id="player-title">Perfect</h2>
+        <p class="song-artist" id="player-artist">Ed Sheeran</p>
+
+        <div class="dedication-box" id="player-dedication">
+          "Esta canción me recuerda al día en que nos miramos y supe que eras tú."
+        </div>
+
+        <!-- Barra de Progreso -->
+        <div class="progress-container">
+          <div class="progress-bar-bg" id="progress-container">
+            <div class="progress-bar-fill" id="progress-bar"></div>
+          </div>
+          <div class="time-stamps">
+            <span id="current-time">0:00</span>
+            <span id="duration-time">3:20</span>
+          </div>
+        </div>
+
+        <!-- Controles -->
+        <div class="player-controls">
+          <button class="ctrl-btn" id="prev-btn" title="Anterior">⏮️</button>
+          <button class="ctrl-btn play-btn" id="main-play-btn" title="Reproducir">▶️</button>
+          <button class="ctrl-btn" id="next-btn" title="Siguiente">⏭️</button>
+        </div>
+
+        <audio id="audio-player"></audio>
+      </div>
+
+      <!-- Lado Derecho: Lista de Canciones -->
+      <div class="playlist-card">
+        <h3 class="playlist-title">
+          <span>💖</span> Canciones de Nuestro Amor
+        </h3>
+        <div class="playlist-items" id="playlist-list">
+          <!-- Se llena dinámicamente con JavaScript -->
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="main-footer">
+      <p>Hecho con <span class="heart-beat">❤️</span> para ti.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Lista de canciones de demostración (se pueden cambiar fácilmente por archivos MP3 locales o enlaces)
+    const playlist = [
+      {
+        title: "Perfect",
+        artist: "Ed Sheeran",
+        dedication: "Bailar contigo a solas, sintiendo que el tiempo se detiene a nuestro alrededor.",
+        cover: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=300&auto=format&fit=crop",
+        audio: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3"
+      },
+      {
+        title: "Yellow",
+        artist: "Coldplay",
+        dedication: "Mira cómo brillan las estrellas para ti, todo lo que haces es magia.",
+        cover: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=300&auto=format&fit=crop",
+        audio: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b273b432.mp3?filename=tender-love-11005.mp3"
+      },
+      {
+        title: "Until I Found You",
+        artist: "Stephen Sanchez",
+        dedication: "Pensé que el amor era solo un cuento, hasta el día en que te encontré.",
+        cover: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=300&auto=format&fit=crop",
+        audio: "https://cdn.pixabay.com/download/audio/2022/10/25/audio_2c525ec1ff.mp3?filename=sweet-love-123498.mp3"
+      },
+      {
+        title: "Golden Hour",
+        artist: "JVKE",
+        dedication: "En tus ojos veo la hora dorada más hermosa de todas las tardes.",
+        cover: "https://images.unsplash.com/photo-1519741497674-611481863552?w=300&auto=format&fit=crop",
+        audio: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=romantic-guitar-15024.mp3"
+      }
+    ];
+
+    let currentTrackIndex = 0;
+    const audio = document.getElementById('audio-player');
+    const playBtn = document.getElementById('main-play-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const progressContainer = document.getElementById('progress-container');
+    const vinyl = document.getElementById('vinyl');
+    const playerTitle = document.getElementById('player-title');
+    const playerArtist = document.getElementById('player-artist');
+    const playerCover = document.getElementById('player-cover');
+    const playerDedication = document.getElementById('player-dedication');
+    const currentTimeEl = document.getElementById('current-time');
+    const durationTimeEl = document.getElementById('duration-time');
+    const playlistEl = document.getElementById('playlist-list');
+
+    function renderPlaylist() {
+      playlistEl.innerHTML = '';
+      playlist.forEach((track, index) => {
+        const item = document.createElement('div');
+        item.className = `track-item ${index === currentTrackIndex ? 'active' : ''}`;
+        item.innerHTML = `
+          <img src="${track.cover}" class="track-thumb" alt="${track.title}">
+          <div class="track-info">
+            <div class="track-name">${track.title}</div>
+            <div class="track-artist">${track.artist}</div>
+          </div>
+          <span class="track-icon">${index === currentTrackIndex ? '▶' : '♫'}</span>
+        `;
+        item.addEventListener('click', () => {
+          loadTrack(index);
+          playTrack();
+        });
+        playlistEl.appendChild(item);
+      });
+    }
+
+    function loadTrack(index) {
+      currentTrackIndex = index;
+      const track = playlist[index];
+      playerTitle.textContent = track.title;
+      playerArtist.textContent = track.artist;
+      playerCover.src = track.cover;
+      playerDedication.textContent = `"${track.dedication}"`;
+      audio.src = track.audio;
+      renderPlaylist();
+    }
+
+    function playTrack() {
+      audio.play().then(() => {
+        playBtn.innerHTML = '⏸️';
+        vinyl.classList.add('rotating');
+      }).catch(e => console.log('Playback error:', e));
+    }
+
+    function pauseTrack() {
+      audio.pause();
+      playBtn.innerHTML = '▶️';
+      vinyl.classList.remove('rotating');
+    }
+
+    playBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        playTrack();
+      } else {
+        pauseTrack();
+      }
+    });
+
+    prevBtn.addEventListener('click', () => {
+      currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+      loadTrack(currentTrackIndex);
+      playTrack();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+      loadTrack(currentTrackIndex);
+      playTrack();
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progressBar.style.width = `${percent}%`;
+
+        // Formato minutos:segundos
+        const curMins = Math.floor(audio.currentTime / 60);
+        const curSecs = Math.floor(audio.currentTime % 60);
+        currentTimeEl.textContent = `${curMins}:${curSecs < 10 ? '0' : ''}${curSecs}`;
+
+        const durMins = Math.floor(audio.duration / 60);
+        const durSecs = Math.floor(audio.duration % 60);
+        durationTimeEl.textContent = `${durMins}:${durSecs < 10 ? '0' : ''}${durSecs}`;
+      }
+    });
+
+    audio.addEventListener('ended', () => {
+      nextBtn.click();
+    });
+
+    progressContainer.addEventListener('click', (e) => {
+      const width = progressContainer.clientWidth;
+      const clickX = e.offsetX;
+      const duration = audio.duration;
+      if (duration) {
+        audio.currentTime = (clickX / width) * duration;
+      }
+    });
+
+    // Cargar pista inicial
+    loadTrack(0);
+  </script>
+</body>
+</html>

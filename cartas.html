@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cartas & Mensajes de Amor 💌 | Nuestro Rincón</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Cuadrícula de Sobres */
+    .envelopes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      width: 100%;
+      margin-top: 1rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .envelope-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.35s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    .envelope-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--primary);
+      box-shadow: 0 15px 35px var(--primary-glow);
+    }
+
+    .envelope-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .envelope-card:hover .envelope-icon {
+      transform: scale(1.15) rotate(5deg);
+    }
+
+    .envelope-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      background: rgba(255, 75, 114, 0.12);
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      margin-bottom: 0.8rem;
+    }
+
+    .envelope-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .envelope-hint {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Modal de Carta Abierta */
+    .letter-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    .letter-paper {
+      background: #fffdfa;
+      color: #2c2523;
+      max-width: 650px;
+      width: 100%;
+      border-radius: 16px;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      position: relative;
+      animation: unfoldLetter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-left: 6px solid var(--primary);
+    }
+
+    .letter-header-tag {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .letter-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #1a1615;
+      margin-bottom: 1.2rem;
+    }
+
+    .letter-body {
+      font-family: var(--font-romantic);
+      font-size: 1.6rem;
+      line-height: 1.5;
+      color: #3b312e;
+      margin-bottom: 2rem;
+      white-space: pre-line;
+    }
+
+    .letter-sign {
+      text-align: right;
+      font-family: var(--font-romantic);
+      font-size: 1.8rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .close-letter-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.08);
+      border: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+      transition: background 0.2s ease;
+    }
+
+    .close-letter-btn:hover {
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    /* Sección Raspa y Gana de Amor */
+    .scratch-section {
+      width: 100%;
+      max-width: 650px;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glass);
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      margin-top: 1rem;
+    }
+
+    .scratch-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .scratch-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 1.8rem;
+    }
+
+    .scratch-card-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      height: 180px;
+      margin: 0 auto;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    .scratch-reward {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #ff4b72, #9b51e0);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .scratch-reward-icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .scratch-reward-text {
+      font-size: 1.35rem;
+      font-weight: 700;
+      font-family: var(--font-romantic);
+    }
+
+    .scratch-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      cursor: crosshair;
+    }
+
+    @keyframes unfoldLetter {
+      from { transform: scale(0.8) translateY(30px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles-canvas"></canvas>
+
+  <div class="app-container">
+    <header class="nav-header">
+      <a href="index.html" class="logo">
+        <span>✨</span> Nuestro Universo
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-btn">← Volver al Menú</a></li>
+          <li><a href="musica.html" class="nav-btn">Música</a></li>
+          <li><a href="galeria.html" class="nav-btn">Fotos</a></li>
+          <li><a href="cartas.html" class="nav-btn active">Cartas</a></li>
+          <li><a href="timeline.html" class="nav-btn">Historia</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="hero-section" style="margin-bottom: 1.5rem;">
+      <div class="badge-tag">💌 Mensajes del Corazón</div>
+      <h1 class="hero-title">Cartas & Secretos</h1>
+      <p class="hero-subtitle">"Abre un sobre cuando sientas que necesitas un abrazo mío"</p>
+    </section>
+
+    <!-- Sobres para abrir -->
+    <div class="envelopes-grid">
+      
+      <!-- Carta 1 -->
+      <div class="envelope-card" onclick="openLetter(0)">
+        <div class="envelope-icon">💌</div>
+        <span class="envelope-tag">Abre esto...</span>
+        <h3 class="envelope-title">Cuando me extrañes</h3>
+        <p class="envelope-hint">Toca para abrir el sobre ✨</p>
+      </div>
+
+      <!-- Carta 2 -->
+      <div class="envelope-card" onclick="openLetter(1)">
+        <div class="envelope-icon">🌙</div>
+        <span class="envelope-tag">Abre esto...</span>
+        <h3 class="envelope-title">Cuando no puedas dormir</h3>
+        <p class="envelope-hint">Toca para abrir el sobre ✨</p>
+      </div>
+
+      <!-- Carta 3 -->
+      <div class="envelope-card" onclick="openLetter(2)">
+        <div class="envelope-icon">🌧️</div>
+        <span class="envelope-tag">Abre esto...</span>
+        <h3 class="envelope-title">Cuando tengas un mal día</h3>
+        <p class="envelope-hint">Toca para abrir el sobre ✨</p>
+      </div>
+
+      <!-- Carta 4 -->
+      <div class="envelope-card" onclick="openLetter(3)">
+        <div class="envelope-icon">🥂</div>
+        <span class="envelope-tag">Abre esto...</span>
+        <h3 class="envelope-title">Para recordar cuánto te amo</h3>
+        <p class="envelope-hint">Toca para abrir el sobre ✨</p>
+      </div>
+
+    </div>
+
+    <!-- Mini-Juego Novedoso: Raspa y Gana del Amor -->
+    <div class="scratch-section">
+      <h2 class="scratch-title">🎁 Raspa y Gana de Amor</h2>
+      <p class="scratch-subtitle">Usa tu mouse o tu dedo para raspar la tarjeta gris y descubrir tu premio especial de hoy:</p>
+      
+      <div class="scratch-card-wrapper">
+        <div class="scratch-reward">
+          <div class="scratch-reward-icon">🎟️✨</div>
+          <div class="scratch-reward-text" id="reward-text">
+            ¡Vale por una cena romántica y un masaje relajante! ❤️
+          </div>
+        </div>
+        <canvas id="scratch-canvas" class="scratch-canvas"></canvas>
+      </div>
+    </div>
+
+    <!-- Modal de la Carta -->
+    <div class="letter-modal" id="letter-modal" onclick="closeModalOnOutside(event)">
+      <div class="letter-paper">
+        <button class="close-letter-btn" onclick="closeLetter()">✕</button>
+        <div class="letter-header-tag" id="letter-modal-tag">Mensaje Especial</div>
+        <h2 class="letter-title" id="letter-modal-title">Título de la carta</h2>
+        <div class="letter-body" id="letter-modal-body">
+          Contenido de la carta...
+        </div>
+        <div class="letter-sign">Con todo mi amor, siempre ❤️</div>
+      </div>
+    </div>
+
+    <footer class="main-footer">
+      <p>Hecho con <span class="heart-beat">❤️</span> para ti.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Cartas de amor
+    const lettersData = [
+      {
+        tag: "Abre cuando me extrañes",
+        title: "Siempre estoy contigo",
+        body: "Si estás leyendo esto y me extrañas, quiero que cierres los ojos un momento y respires profundo.\n\nRecuerda que no importa la distancia ni la hora, una parte de mi corazón siempre late por ti. Estoy contando los minutos para volver a abrazarte y llenarte de besos."
+      },
+      {
+        tag: "Abre cuando no puedas dormir",
+        title: "Noches bajo el mismo cielo",
+        body: "Mira hacia la ventana o mira el techo... imagina que estoy ahí a tu lado, acariciando tu cabello y susurrándote que todo está en paz.\n\nQue tengas los sueños más dulces. Mañana será un día maravilloso y yo estaré aquí para ti."
+      },
+      {
+        tag: "Abre cuando tengas un mal día",
+        title: "Eres más fuerte de lo que crees",
+        body: "Sé que hay días difíciles, pero no olvides lo increíble y valiosa que eres. Tu fuerza me inspira todos los días.\n\nEste mal momento pasará pronto. Te mando el abrazo más apretado del mundo, y cuando nos veamos te consentiré con todo lo que te gusta."
+      },
+      {
+        tag: "Para recordar cuánto te amo",
+        title: "Mi elección de todos los días",
+        body: "Te amo en las risas, en los silencios, en los días soleados y en las tormentas.\n\nLlegaste a mi vida para llenarla de luz y sentido. Gracias por ser mi compañera, mi cómplice y mi amor verdadero."
+      }
+    ];
+
+    const modal = document.getElementById('letter-modal');
+    const modalTag = document.getElementById('letter-modal-tag');
+    const modalTitle = document.getElementById('letter-modal-title');
+    const modalBody = document.getElementById('letter-modal-body');
+
+    function openLetter(index) {
+      const data = lettersData[index];
+      modalTag.textContent = data.tag;
+      modalTitle.textContent = data.title;
+      modalBody.textContent = data.body;
+      modal.style.display = 'flex';
+    }
+
+    function closeLetter() {
+      modal.style.display = 'none';
+    }
+
+    function closeModalOnOutside(e) {
+      if (e.target === modal) {
+        closeLetter();
+      }
+    }
+
+    // ==========================================
+    // Lógica del Raspa y Gana
+    // ==========================================
+    const canvas = document.getElementById('scratch-canvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    function initScratchCard() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+
+      // Capa plateada/brillante para raspar
+      ctx.fillStyle = '#6e6e80';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Texto decorativo sobre la superficie a raspar
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 16px Outfit, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('✨ ¡Raspa aquí para tu sorpresa! ✨', canvas.width / 2, canvas.height / 2);
+    }
+
+    function scratch(e) {
+      if (!isDrawing) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+      const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 22, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); });
+    canvas.addEventListener('mousemove', scratch);
+    window.addEventListener('mouseup', () => { isDrawing = false; });
+
+    // Soporte táctil en celulares
+    canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); }, { passive: true });
+    canvas.addEventListener('touchmove', scratch, { passive: true });
+    window.addEventListener('touchend', () => { isDrawing = false; });
+
+    window.addEventListener('load', initScratchCard);
+    window.addEventListener('resize', initScratchCard);
+  </script>
+</body>
+</html>
