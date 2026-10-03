@@ -241,115 +241,144 @@ body {
   letter-spacing: 1px;
 }
 
-/* Tarjetas de Menú Interactivo (Opciones principales) */
+/* Grid de Proyectos */
 .options-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
   width: 100%;
   margin-top: 1rem;
 }
 
-.experience-card {
+.project-card {
   position: relative;
   background: var(--bg-card);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glass);
   border-radius: 24px;
-  padding: 2.2rem 1.8rem;
+  overflow: hidden;
   text-decoration: none;
   color: inherit;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
-.experience-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  background: radial-gradient(circle at 20% 0%, var(--card-accent, rgba(255,75,114,0.15)), transparent 70%);
-  opacity: 0.5;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-
-.experience-card:hover {
+.project-card:hover {
   transform: translateY(-8px) scale(1.02);
   background: var(--bg-card-hover);
   border-color: var(--border-glass-hover);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 25px var(--card-glow, rgba(255, 75, 114, 0.2));
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45), 0 0 30px var(--card-glow, rgba(255, 75, 114, 0.3));
 }
 
-.experience-card:hover::before {
-  opacity: 1;
+.project-thumb-box {
+  width: 100%;
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+  background: #181124;
 }
 
-.card-icon-wrapper {
-  width: 60px;
-  height: 60px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  transition: transform 0.4s ease;
+.project-thumb-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
 }
 
-.experience-card:hover .card-icon-wrapper {
-  transform: scale(1.15) rotate(6deg);
+.project-card:hover .project-thumb-box img {
+  transform: scale(1.08);
 }
 
-.card-badge {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.75rem;
+.project-badge-status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 0.3rem 0.8rem;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--accent);
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
   letter-spacing: 0.5px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.status-live {
+  background: rgba(46, 213, 115, 0.25);
+  border: 1px solid #2ed573;
+  color: #7bed9f;
+}
+
+.status-dev {
+  background: rgba(255, 165, 2, 0.25);
+  border: 1px solid #ffa502;
+  color: #ffc048;
+}
+
+.status-soon {
+  background: rgba(255, 75, 114, 0.25);
+  border: 1px solid var(--primary);
+  color: #ff85a2;
+}
+
+.project-content {
+  padding: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.project-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
   margin-bottom: 0.8rem;
 }
 
-.card-title {
+.p-tag {
+  font-size: 0.72rem;
+  background: rgba(255, 255, 255, 0.07);
+  padding: 0.2rem 0.6rem;
+  border-radius: 8px;
+  color: var(--text-muted);
+}
+
+.project-title {
   font-size: 1.35rem;
   font-weight: 700;
   color: #fff;
   margin-bottom: 0.6rem;
 }
 
-.card-desc {
+.project-desc {
   font-size: 0.92rem;
   color: var(--text-muted);
-  line-height: 1.5;
+  line-height: 1.55;
   margin-bottom: 1.5rem;
   flex-grow: 1;
 }
 
-.card-action {
-  display: flex;
+.project-btn {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.75rem 1.2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--accent);
-  transition: gap 0.3s ease;
+  color: #fff;
+  transition: all 0.3s ease;
 }
 
-.experience-card:hover .card-action {
-  gap: 0.8rem;
-  color: #fff;
+.project-card:hover .project-btn {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-color: transparent;
+  box-shadow: 0 4px 15px var(--primary-glow);
 }
 
 /* Colores temáticos por tarjeta */
